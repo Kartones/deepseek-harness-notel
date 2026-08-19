@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-Process-local anonymous user identities for explicit DeepSeek Harness sessions. `getOrCreateSessionAnonymousUserId(sessionId)` returns a random UUID v4 for the supplied session id. Repeated calls for that session in one process return the same value; distinct session ids return distinct values. The library performs no disk I/O and reads no environment variables.
+Process-local anonymous user identities for explicit DeepSeek Harness sessions. `getOrCreateSessionAnonymousUserId(sessionId)` returns a random UUID v4 for the supplied session id. Repeated calls for that session in one process return the same value; distinct session ids return distinct values. The library performs no disk I/O and reads no environment variables. `ANONYMOUS_USER_ID_PATTERN` matches the returned format; consumers asserting on the id's shape import this constant instead of duplicating the pattern.
 
 ## Composition
 
