@@ -23,6 +23,7 @@ The feedback group collects human opinions about the harness's work: users can s
 | Package | Role |
 |---|---|
 | [`command-feedback`](command-feedback/README.md) | A `/feedback` command that records a free-text session remark with one command, without a model turn |
+| [`command-feedback-local`](command-feedback-local/README.md) | Local log-only `/feedback` producer with the same event and command identity |
 | [`message-feedback`](message-feedback/README.md) | Per-message ratings and notes, served to product surfaces through the `messageFeedback` service |
 
 Session remarks are a one-way signal: recording one is safe at any point in a conversation and never changes what the model sees. With a feedback-gated sharing policy, recording a session remark is what releases the session for sharing.

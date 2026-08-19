@@ -23,6 +23,7 @@ feedback 组收集用户对 harness 工作成果的意见：用户可以提交�
 | 包 | 职责 |
 |---|---|
 | [`command-feedback`](command-feedback/README.zh.md) | 一条命令即可记录自由文本会话评价的 `/feedback` 命令，无需模型轮次 |
+| [`command-feedback-local`](command-feedback-local/README.zh.md) | 使用相同事件和命令标识的本地、仅写入日志的 `/feedback` 生产方 |
 | [`message-feedback`](message-feedback/README.zh.md) | 逐消息评分与备注，通过 `messageFeedback` 服务提供给产品界面 |
 
 会话评价是单向信号：在对话的任何时刻记录它都是安全的，且绝不会改变模型看到的内容。在 feedback-gated 共享策略下，记录会话评价正是释放会话共享的动作。
