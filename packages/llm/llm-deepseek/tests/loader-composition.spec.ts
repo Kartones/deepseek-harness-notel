@@ -25,6 +25,7 @@ import FileSettingsProvider from '@deepseek-ai/dsh-settings-file'
 import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
 import * as SessionLogDeepSeek from '@deepseek-ai/dsh-session-log-deepseek'
 import * as DeepSeekPluginPackageInventory from '@deepseek-ai/dsh-plugin-package-inventory-deepseek'
+import { ANONYMOUS_USER_ID_PATTERN } from '@deepseek-ai/dsh-session-anonymous-user-id'
 import * as LlmDeepSeek from '@deepseek-ai/dsh-llm-deepseek'
 import { assemble } from './assemble.ts'
 import { closeMockServers, mockServer, textEvents } from './mock-server.ts'
@@ -199,7 +200,7 @@ describe('llm-deepseek real dynamic composition', () => {
     expect(ctx.get('settings')!.describe().map(entry => entry.ns)).toEqual([NS])
     await assemble(ctx, { model: 'deepseek-v4-flash', messages: [] })
     expect(serverA.headers[0]?.authorization).toBe('Bearer boot-key')
-    expect(serverA.headers[0]?.['x-deepseek-harness-user-id']).toMatch(/^[0-9a-f-]{36}$/i)
+    expect(serverA.headers[0]?.['x-deepseek-harness-user-id']).toMatch(ANONYMOUS_USER_ID_PATTERN)
 
     // External edits, exactly as a user or the web UI would leave them on disk.
     await writeFile(settingsPath, `llm-deepseek:\n  baseURL: ${serverB.url}\n`)
