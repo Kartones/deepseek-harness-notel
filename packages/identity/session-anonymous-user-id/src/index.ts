@@ -9,6 +9,9 @@ import type { Branded } from '@deepseek-ai/dsh-brand'
 /** A random UUID v4 that identifies requests from one session in this process. */
 export type AnonymousUserId = Branded<'AnonymousUserId'>
 
+/** Matches the UUID v4 format returned by {@link getOrCreateSessionAnonymousUserId}. */
+export const ANONYMOUS_USER_ID_PATTERN = /^[0-9a-f-]{36}$/i
+
 const ids = new Map<Branded<'SessionId'>, AnonymousUserId>()
 
 /**
