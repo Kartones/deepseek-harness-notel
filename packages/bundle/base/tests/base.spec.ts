@@ -27,14 +27,16 @@ describe('dsh-base bundle', () => {
     )
     expect(Array.isArray(parsed)).toBe(true)
     // The base layer is one insert list over the empty profile root.
-    const rows = (parsed as { insert?: { id?: string; config?: Record<string, unknown> }[] }[]).flatMap(
+    const rows = (parsed as { insert?: { id?: string; name?: string; config?: Record<string, unknown> }[] }[]).flatMap(
       patch => patch.insert ?? [],
     )
     expect(rows.length).toBeGreaterThan(50)
     expect(rows.some(row => row.id === 'agent-loop')).toBe(true)
-    expect(rows.find(row => row.id === 'session-telemetry-otel')?.config?.['mode']).toEqual({
-      __jsExpr: "process.env.DSH_TELEMETRY_MODE || 'DISABLED'",
+    expect(rows.find(row => row.id === 'command-feedback')?.name).toBe('@deepseek-ai/dsh-command-feedback-local')
+    expect(rows.find(row => row.id === 'session-telemetry-otel')).toMatchObject({
+      name: '@deepseek-ai/dsh-session-telemetry-disabled',
     })
+    expect(rows.find(row => row.id === 'session-telemetry-otel')?.config).toBeUndefined()
     expect(rows.filter(row => row.id === 'subagent-codex')).toHaveLength(0)
     expect(rows.filter(row => row.id === 'subagent-claude-code')).toHaveLength(0)
     expect(manifest.dependencies).not.toHaveProperty('@deepseek-ai/dsh-subagent-codex')

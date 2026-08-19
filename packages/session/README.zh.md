@@ -48,5 +48,6 @@
 |---|---|
 | [`session-telemetry/`](session-telemetry/README.md) | 定义捕获、脱敏、投影，以及实时或按需后端投递。 |
 | [`session-telemetry-otel/`](session-telemetry-otel/README.md) | 通过 OpenTelemetry 日志以 `FULL`、`FEEDBACK_ONLY` 或 `DISABLED` 模式投递遥测。 |
+| [`session-telemetry-disabled/`](session-telemetry-disabled/README.md) | 以固定的禁用共享状态丢弃遥测记录，且没有网络传输。 |
 
 子系统参考：[persistence.md](../../docs/subsystems/persistence.md)、[session-projection.md](../../docs/subsystems/session-projection.md)、[session-title.md](../../docs/subsystems/session-title.md) 与 [session-telemetry.md](../../docs/subsystems/session-telemetry.md)。同一时间只允许一个标题提供方注册；demo 主干挂载回退服务，两个模型提供方都留在默认组合之外。
