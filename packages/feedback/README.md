@@ -7,6 +7,7 @@ The feedback family exposes two deliberately separate contracts: an immutable re
 | Package | Role | ctx key |
 |---|---|---|
 | `command-feedback/` | Trigger-independent `feedback/record` event plus the human-facing `/feedback` producer | — |
+| [`command-feedback-local/`](command-feedback-local/README.md) | Local log-only `/feedback` producer with the same event and command identity | — |
 | `message-feedback/` | Lifecycle-bound per-message rating/note sidecar plus Host `messageFeedback.list/put/delete` Remote contract | `messageFeedback` |
 
 A command feedback remark is log-only: it never enters model context or derived history. When mounted, [`dsh-session-telemetry-otel`](../session/session-telemetry-otel) observes `feedback/record` to release a pending telemetry prefix or warn that disabled telemetry leaves the feedback local; capture itself remains independent of that policy.

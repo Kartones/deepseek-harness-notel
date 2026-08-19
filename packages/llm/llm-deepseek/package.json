@@ -38,7 +38,7 @@
     "@deepseek-ai/dsh-llm": "workspace:^",
     "@deepseek-ai/dsh-settings": "workspace:^",
     "@deepseek-ai/dsh-timeout": "workspace:^",
-    "@deepseek-ai/dsh-anonymous-user-id": "workspace:^",
+    "@deepseek-ai/dsh-session-anonymous-user-id": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -52,7 +52,7 @@
     "@deepseek-ai/dsh-llm": "workspace:^",
     "@deepseek-ai/dsh-settings": "workspace:^",
     "@deepseek-ai/dsh-timeout": "workspace:^",
-    "@deepseek-ai/dsh-anonymous-user-id": "workspace:^",
+    "@deepseek-ai/dsh-session-anonymous-user-id": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

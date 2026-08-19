@@ -7,3 +7,4 @@
 | 包 | 职责 | ctx key |
 |---|---|---|
 | [`anonymous-user-id/`](anonymous-user-id/README.md) | 为遥测、反馈和 DeepSeek 请求持久化一个限定于 Harness home 的匿名关联 id | — |
+| [`session-anonymous-user-id/`](session-anonymous-user-id/README.md) | 为每个会话生成一个进程本地匿名 id | — |

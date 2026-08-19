@@ -14,12 +14,13 @@
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { assertUsableApiKey, LlmError, resolveRetryPolicy, RetryPolicySchema } from '@deepseek-ai/dsh-llm'
-import type { RetryPolicyConfig } from '@deepseek-ai/dsh-llm'
+import type { GenerateOptions, RetryPolicyConfig } from '@deepseek-ai/dsh-llm'
+import { randomUUID } from 'node:crypto'
 import { credentialRef } from '@deepseek-ai/dsh-credentials'
 import { launchEnvironmentOf, type LaunchEnvironmentSnapshot } from '@deepseek-ai/dsh-launch-environment'
 import { deepEqualJson, installSettingsSection, settingsNamespace } from '@deepseek-ai/dsh-settings'
 import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
-import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+import { getOrCreateSessionAnonymousUserId, type AnonymousUserId } from '@deepseek-ai/dsh-session-anonymous-user-id'
 import {
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_MAX_TOKENS,
@@ -245,8 +246,8 @@ export function apply(ctx: Context, config: Config): void {
     )
   }
 
-  let userId: AnonymousUserId | undefined
-  const resolveUserId = (): AnonymousUserId => userId ??= getOrCreateAnonymousUserId()
+  const resolveUserId = (sessionId: GenerateOptions['sessionId']): AnonymousUserId =>
+    sessionId === undefined ? randomUUID() as AnonymousUserId : getOrCreateSessionAnonymousUserId(sessionId)
   const adapter = new DeepSeekAdapter({ options, resolveApiKey, resolveUserId })
   ctx.llm.registerConfigurableProviders([
     { provider: PROVIDER, displayName: 'DeepSeek', settingsNs: NS, settingsPath: [] },

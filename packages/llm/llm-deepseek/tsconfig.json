@@ -36,7 +36,7 @@
       "path": "../../util/timeout"
     },
     {
-      "path": "../../identity/anonymous-user-id"
+      "path": "../../identity/session-anonymous-user-id"
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
@@ -12,7 +12,7 @@ import LlmRuntime, { createUserMessage,
   userAgent,
 } from '@deepseek-ai/dsh-llm'
 import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
-import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+import { ANONYMOUS_USER_ID_PATTERN, type AnonymousUserId } from '@deepseek-ai/dsh-session-anonymous-user-id'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import * as LlmDeepSeek from '@deepseek-ai/dsh-llm-deepseek'
 import { DeepSeekAdapter, resolveAdapterOptions } from '@deepseek-ai/dsh-llm-deepseek'
@@ -82,7 +82,7 @@ describe('DeepSeekAdapter against a mock server', () => {
     })
     // App attribution and DeepSeek request identity are independent wire facts.
     expect(server.headers[0]?.['user-agent']).toBe(userAgent())
-    expect(server.headers[0]?.['x-deepseek-harness-user-id']).toBe(getOrCreateAnonymousUserId())
+    expect(server.headers[0]?.['x-deepseek-harness-user-id']).toMatch(ANONYMOUS_USER_ID_PATTERN)
     expect(server.headers[0]).not.toHaveProperty('x-deepseek-harness-session-id')
     expect(server.headers[0]).not.toHaveProperty('http-referer')
     expect(server.headers[0]).not.toHaveProperty('x-openrouter-title')
@@ -108,8 +108,12 @@ describe('DeepSeekAdapter against a mock server', () => {
     expect(kinds).toEqual(['block-start', 'text-delta', 'block-end', 'usage', 'finish'])
   })
 
-  it('forwards the harness user and session ids for host-side trajectory routing', async () => {
-    const server = await mockServer([{ kind: 'sse', events: textEvents }])
+  it('uses a stable user id within one session and separates sessions', async () => {
+    const server = await mockServer([
+      { kind: 'sse', events: textEvents },
+      { kind: 'sse', events: textEvents },
+      { kind: 'sse', events: textEvents },
+    ])
     const ctx = await harness(server.url)
 
     await assemble(ctx, {
@@ -118,11 +122,30 @@ describe('DeepSeekAdapter against a mock server', () => {
         content: [{ type: 'text', text: 'hi' }],
         source: { kind: 'plugin', plugin: 'test' },
       })],
-      sessionId: SessionId('child-session'),
+      sessionId: SessionId('session-a'),
     })
+    await assemble(ctx, { model: 'deepseek-v4-flash', messages: [], sessionId: SessionId('session-b') })
+    await assemble(ctx, { model: 'deepseek-v4-flash', messages: [], sessionId: SessionId('session-a') })
 
-    expect(server.headers[0]?.['x-deepseek-harness-session-id']).toBe('child-session')
-    expect(server.headers[0]?.['x-deepseek-harness-user-id']).toBe(getOrCreateAnonymousUserId())
+    expect(server.headers.map(headers => headers['x-deepseek-harness-session-id'])).toEqual(['session-a', 'session-b', 'session-a'])
+    expect(server.headers[0]?.['x-deepseek-harness-user-id']).toBe(server.headers[2]?.['x-deepseek-harness-user-id'])
+    expect(server.headers[0]?.['x-deepseek-harness-user-id']).not.toBe(server.headers[1]?.['x-deepseek-harness-user-id'])
+    expect(existsSync(join(testHome, '.anonymous-user-id'))).toBe(false)
+  })
+
+  it('mints a fresh user id for each session-less request', async () => {
+    const server = await mockServer([
+      { kind: 'sse', events: textEvents },
+      { kind: 'sse', events: textEvents },
+    ])
+    const ctx = await harness(server.url)
+
+    await assemble(ctx, { model: 'deepseek-v4-flash', messages: [] })
+    await assemble(ctx, { model: 'deepseek-v4-flash', messages: [] })
+
+    expect(server.headers[0]?.['x-deepseek-harness-user-id'])
+      .not.toBe(server.headers[1]?.['x-deepseek-harness-user-id'])
+    expect(existsSync(join(testHome, '.anonymous-user-id'))).toBe(false)
   })
 
   it('marks the auxiliary compaction call on the wire', async () => {
@@ -1022,7 +1045,7 @@ describe('plugin registration and config', () => {
 
     expect(options).toHaveBeenCalledTimes(1)
     expect(resolveApiKey).toHaveBeenCalledTimes(1)
-    expect(resolveUserId).toHaveBeenCalledTimes(1)
+    expect(resolveUserId).toHaveBeenCalledExactlyOnceWith(undefined)
     expect(server.headers[0]?.authorization).toBe('Bearer per-request-key')
   })
 
