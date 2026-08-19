@@ -19,7 +19,7 @@ import type {
 } from '@deepseek-ai/dsh-llm'
 import type { CredentialRef } from '@deepseek-ai/dsh-credentials'
 import { idleWatchdog, timeoutOf } from '@deepseek-ai/dsh-timeout'
-import type { AnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+import type { AnonymousUserId } from '@deepseek-ai/dsh-session-anonymous-user-id'
 import { serializeRequest } from './serialize.ts'
 import type { RequestDefaults } from './serialize.ts'
 import { parseSse } from './sse.ts'
@@ -81,8 +81,8 @@ export interface DeepSeekAdapterOptions {
    * `MISSING_CREDENTIAL` when no key is available anywhere.
    */
   resolveApiKey: (connection: DeepSeekConnectionOptions) => Promise<string>
-  /** Resolve the harness-home anonymous id shared with telemetry and feedback. */
-  resolveUserId: () => AnonymousUserId
+  /** Resolve the anonymous id scoped to this request's session, when present. */
+  resolveUserId: (sessionId: GenerateOptions['sessionId']) => AnonymousUserId
 }
 
 /** Default maximum idle interval while an adapter stream read is outstanding. */
@@ -223,7 +223,7 @@ export class DeepSeekAdapter extends LlmAdapter {
     // sent to it can never come from different configuration generations.
     const connection = this.config.options()
     const apiKey = await this.config.resolveApiKey(connection)
-    const userId = this.config.resolveUserId()
+    const userId = this.config.resolveUserId(options.sessionId)
     const consumer = new AbortController()
     const upstream = options.signal === undefined
       ? consumer.signal

@@ -7,6 +7,7 @@
 | 包 | 职责 | ctx 键 |
 |---|---|---|
 | `command-feedback/` | 与触发方式无关的 `feedback/record` 事件，以及面向用户的 `/feedback` 生产方 | 无 |
+| [`command-feedback-local/`](command-feedback-local/README.md) | 使用相同事件和命令标识的本地、仅写入日志的 `/feedback` 生产方 | 无 |
 | `message-feedback/` | 绑定生命周期的逐消息评分／备注伴随记录，以及 Host `messageFeedback.list/put/delete` Remote 契约 | `messageFeedback` |
 
 command feedback 评价仅写入日志：它绝不会进入模型上下文或派生历史。挂载后，[`dsh-session-telemetry-otel`](../session/session-telemetry-otel) 会观察 `feedback/record`，以释放待处理的遥测前缀，或在遥测已禁用时警告反馈将留在本地；采集本身与该策略相互独立。
