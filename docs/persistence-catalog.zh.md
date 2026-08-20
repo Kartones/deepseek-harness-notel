@@ -1007,3 +1007,14 @@ export type SessionEvent<T extends SessionEventType = SessionEventType> = {
 ```
 
 来源：[`packages/web/web-search-deepseek/src/provider.ts:83`](../packages/web/web-search-deepseek/src/provider.ts)
+
+<a id="webmarginalia-search-request--log-only"></a>
+
+#### `web/marginalia-search-request` — log-only
+
+```ts persistence-catalog
+/** Secret-free Marginalia search request recorded before dispatch. */
+'web/marginalia-search-request': MarginaliaSearchRequest
+```
+
+来源：[`packages/web/web-search-marginalia/src/provider.ts:48`](../packages/web/web-search-marginalia/src/provider.ts)
