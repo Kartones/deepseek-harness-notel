@@ -3,6 +3,11 @@
   "description": "Inert, fixed-disabled backend for the DeepSeek Harness session telemetry seam",
   "version": "0.1.0-rc.7",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kartones/deepseek-harness-notel.git",
+    "directory": "packages/session/session-telemetry-disabled"
+  },
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
