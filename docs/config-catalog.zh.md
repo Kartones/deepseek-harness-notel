@@ -2969,6 +2969,28 @@ export interface Config {
 
 来源：[`packages/web/web-search-exa/src/index.ts:38`](../packages/web/web-search-exa/src/index.ts)
 
+<a id="deepseek-aidsh-web-search-marginalia"></a>
+
+## `@deepseek-ai/dsh-web-search-marginalia`
+
+需要：`web`
+
+```ts config-catalog
+/** Plugin configuration. */
+export interface Config {
+  /** Literal Marginalia API key; prefer {@link apiKeyEnv} so no secret enters configuration files. */
+  apiKey?: string
+  /** Credential reference resolved for each search; defaults to `MARGINALIA_API_KEY`. */
+  apiKeyEnv?: string
+  /** Marginalia API base; `/search` is appended. */
+  baseURL?: string
+  /** Maximum results per domain, sent as `dc` when set. */
+  resultsPerDomain?: number
+}
+```
+
+来源：[`packages/web/web-search-marginalia/src/index.ts:42`](../packages/web/web-search-marginalia/src/index.ts)
+
 <a id="deepseek-aidsh-web-search-perplexity"></a>
 
 ## `@deepseek-ai/dsh-web-search-perplexity`
