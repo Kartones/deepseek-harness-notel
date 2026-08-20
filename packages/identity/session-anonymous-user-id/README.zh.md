@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-为显式 DeepSeek Harness 会话提供进程本地匿名用户标识。`getOrCreateSessionAnonymousUserId(sessionId)` 为给定会话 id 返回随机 UUID v4。同一进程中对该会话的重复调用返回相同值；不同会话 id 返回不同值。该库不执行磁盘 I/O，也不读取环境变量。
+为显式 DeepSeek Harness 会话提供进程本地匿名用户标识。`getOrCreateSessionAnonymousUserId(sessionId)` 为给定会话 id 返回随机 UUID v4。同一进程中对该会话的重复调用返回相同值；不同会话 id 返回不同值。该库不执行磁盘 I/O，也不读取环境变量。`ANONYMOUS_USER_ID_PATTERN` 匹配返回值的格式；需要断言标识形状的消费者应导入该常量，而不是重复该正则。
 
 ## 组合
 
