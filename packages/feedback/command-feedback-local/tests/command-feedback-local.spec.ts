@@ -51,7 +51,7 @@ async function harness(id = `command-feedback-local-${Math.random()}`): Promise<
 
 /** Execute `/feedback` through the registry boundary used by command adapters. */
 async function run(test: Harness, suffix = ''): Promise<{ kind: string; text?: string }> {
-  const settled = await test.ctx.commands.execute(test.agent, `/feedback${suffix}`, new AbortController().signal)
+  const settled = await test.ctx.commands.execute(test.agent, `/feedback${suffix}`, [], new AbortController().signal)
   if (settled === undefined) throw new Error('feedback command was not registered')
   return settled.result
 }

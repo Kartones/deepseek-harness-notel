@@ -84,7 +84,7 @@ describe('/feedback local real Loader composition through cordis.yml', () => {
 
     const owner = agent(context)
     expect(context.commands.list(owner).map(command => command.name)).toContain('feedback')
-    const accepted = await context.commands.execute(owner, '/feedback the diff view is unreadable', new AbortController().signal)
+    const accepted = await context.commands.execute(owner, '/feedback the diff view is unreadable', [], new AbortController().signal)
     const feedbackMessage = new RegExp([
       '^Feedback recorded for session feedback-local-loader-agent\\n',
       'Anonymous user: .+\\. Session sharing is not configured\\.$',
@@ -93,7 +93,7 @@ describe('/feedback local real Loader composition through cordis.yml', () => {
       kind: 'success',
       text: expect.stringMatching(feedbackMessage),
     })
-    const rejected = await context.commands.execute(owner, '/feedback', new AbortController().signal)
+    const rejected = await context.commands.execute(owner, '/feedback', [], new AbortController().signal)
     expect(rejected?.result).toEqual({ kind: 'error', text: 'Feedback text is required. Usage: /feedback <text>' })
     expect(owner.session.events.map(event => event.type))
       .toEqual(['command/run', 'feedback/record', 'command/done', 'command/run', 'command/done'])
